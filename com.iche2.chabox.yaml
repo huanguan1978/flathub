@@ -65,5 +65,4 @@ modules:
         url: https://webpath.iche2.com/release/chabox-build-linux-arm64-1.0.0.zip
         sha256: 1f3df96c0f3da220bb0f475e8255649af4bff77f1c3c690ee80f2e7b9b7c8c76
         dest-filename: chabox-build-linux-arm64-1.0.0.zip
-    stage-packages:
-      - libcanberra-gtk3-module
+
