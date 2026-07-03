@@ -20,30 +20,24 @@ modules:
         echo "[flatpak] unpacked archive top-level entries:"
         ls -la
 
-        bundle_root="."
-        if [ -d chabox ] && [ -f chabox/chabox ]; then
-          bundle_root="chabox"
-        fi
-        echo "[flatpak] selected bundle_root: ${bundle_root}"
-
         for required in chabox lib data; do
-          if [ ! -e "${bundle_root}/${required}" ]; then
-            echo "[flatpak][error] missing ${bundle_root}/${required}" >&2
-            echo "[flatpak][hint] this manifest expects <root>/{chabox,lib,data} or chabox/{chabox,lib,data}" >&2
+          if [ ! -e "${required}" ]; then
+            echo "[flatpak][error] missing ${required}" >&2
+            echo "[flatpak][hint] this manifest expects {chabox,lib,data}" >&2
             exit 1
           fi
         done
 
-        install -Dm755 "${bundle_root}/chabox" /app/chabox/chabox
-        mkdir -p /app/chabox/lib /app/chabox/data /app/bin
-        cp -R "${bundle_root}/lib/." /app/chabox/lib/
-        cp -R "${bundle_root}/data/." /app/chabox/data/
-        printf '%s\n' '#!/bin/sh' 'exec /app/chabox/chabox "$@"' > /app/bin/chabox
-        chmod 755 /app/bin/chabox
-      - install -Dm644 /app/chabox/data/flutter_assets/assets/chabox_icon_square_512x512.svg /app/share/icons/hicolor/scalable/apps/com.iche2.chabox.svg
-      - install -Dm644 /app/chabox/data/flutter_assets/assets/chabox_appstream_metainfo.xml /app/share/metainfo/com.iche2.chabox.metainfo.xml
-      - install -Dm644 /app/chabox/data/flutter_assets/assets/chabox.desktop /app/share/applications/com.iche2.chabox.desktop
-      - install -Dm644 /app/chabox/data/flutter_assets/assets/chabox_shared_mime_info.xml /app/share/mime/packages/chabox.xml
+      - cp -R chabox /app/chabox
+      - cp -R lib /app/
+      - cp -R data /app/
+      - mkdir -p /app/bin/
+      - ln -s /app/chabox /app/bin/chabox
+      - install -Dm644 /app/data/flutter_assets/assets/chabox_icon_square_512x512.svg /app/share/icons/hicolor/scalable/apps/com.iche2.chabox.svg
+      - install -Dm644 /app/data/flutter_assets/assets/chabox_appstream_metainfo.xml /app/share/metainfo/com.iche2.chabox.metainfo.xml
+      - install -Dm644 /app/data/flutter_assets/assets/chabox_shared_mime_info.xml /app/share/mime/packages/chabox.xml      
+      - install -Dm644 /app/data/flutter_assets/assets/chabox.desktop /app/share/applications/com.iche2.chabox.desktop
+      
     sources:
       - type: archive
         only-arches:
@@ -58,5 +52,4 @@ modules:
         strip-components: 0
         url: https://webpath.iche2.com/release/chabox-build-linux-arm64-1.0.0.zip
         sha256: 1f3df96c0f3da220bb0f475e8255649af4bff77f1c3c690ee80f2e7b9b7c8c76
-
 
