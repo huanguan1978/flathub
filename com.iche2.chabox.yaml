@@ -16,18 +16,6 @@ modules:
   - name: chabox
     buildsystem: simple
     build-commands:
-      - |
-        echo "[flatpak] unpacked archive top-level entries:"
-        ls -la
-
-        for required in chabox lib data; do
-          if [ ! -e "${required}" ]; then
-            echo "[flatpak][error] missing ${required}" >&2
-            echo "[flatpak][hint] this manifest expects {chabox,lib,data}" >&2
-            exit 1
-          fi
-        done
-
       - cp -R chabox /app/chabox
       - cp -R lib /app/
       - cp -R data /app/
